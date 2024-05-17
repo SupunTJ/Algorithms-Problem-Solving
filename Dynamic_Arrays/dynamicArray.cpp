@@ -8,6 +8,7 @@ class DynamicArray
 private:
     int* _data;
     int _capacity;
+    int __initialcapacity;
     int _size;
     void _copy(int* source, int* target, int size){
         for (int i = 0; i < size; i++)
@@ -21,6 +22,7 @@ public:
     DynamicArray(int initialcapacity){
         _data = new int[initialcapacity];
         _capacity = initialcapacity;
+        __initialcapacity = initialcapacity;
         _size = 0;
     }
 
@@ -44,6 +46,16 @@ public:
         
         _data[_size - 1] = 0;
         _size--;
+
+        if (_capacity / 2 == _size && _capacity % 2 == 0 && _capacity != __initialcapacity)
+        {
+            int* _temp = new int[_size];
+            _copy(_data, _temp, _size);
+            delete _data;
+            _data = _temp;
+            _capacity = _size;
+        }
+        
     }
 
     void insert(int data){
@@ -53,6 +65,7 @@ public:
             _capacity = _capacity * 2;
             _data = new int[_capacity];
             _copy(_temp, _data, _size);
+            delete _temp;
         }
         
 
